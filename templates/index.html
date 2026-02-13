@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Retrieval | Relevance Feedback</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #4361ee; --bg: #f8f9fa; --card-bg: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .upload-section { border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 30px; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .image-card { position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+        .image-card:hover { transform: translateY(-5px); }
+        .image-card img { width: 100%; height: 200px; object-fit: cover; }
+        .feedback-checkbox { position: absolute; top: 10px; right: 10px; transform: scale(1.5); cursor: pointer; }
+        .refine-btn { position: fixed; bottom: 20px; right: 20px; padding: 15px 30px; background: #2ecc71; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Image Search</h1>
+        <div class="upload-section">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="myfile" required>
+                <button type="submit">Start Search</button>
+            </form>
+        </div>
+
+        {% if similar_images %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="original_query_url" value="{{ uploaded_url }}">
+            <div class="gallery">
+                {% for img in similar_images %}
+                <div class="image-card">
+                    <input type="checkbox" name="selected_images" value="{{ img.url }}" class="feedback-checkbox">
+                    <img src="{{ img.url }}">
+                    <div style="padding: 10px; font-size: 0.8rem;">Similarity: {{ img.score }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" name="refine" class="refine-btn">
+                <i class="fas fa-sync"></i> Refine Results
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>

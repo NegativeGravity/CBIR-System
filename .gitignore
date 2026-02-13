@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv
+env/
+venv/
+
+# Database
+*.sqlite3
+
+# Large Files & Archives (مهم)
+*.rar
+*.zip
+*.pkl
+*.h5
+*.onnx
+ml_engine/artifacts/
+Assignment3.rar
+
+# OS
+.DS_Store
+Thumbs.db
+
+media
+.idea
